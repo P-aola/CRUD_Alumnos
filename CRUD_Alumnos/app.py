@@ -1,15 +1,23 @@
+import os
+from flask import Flask, render_template, request, redirect, url_for
+from pymongo import MongoClient
+
 app = Flask(__name__)
+
+# Conexión a MongoDB
 mongo_uri = os.environ.get("MONGO_URI")
-if not mongo_uri:
-  if os.environ.get("RENDER"):
-   raise RuntimeError("Configura MONGO_URI en Render.")
-mongo_uri = "mongodb://127.0.0.1:27017/"
-cliente = MongoClient(mongo_uri, serverSelectionTimeoutMS=10000)
+cliente = MongoClient(mongo_uri, tlsAllowInvalidCertificates=True)
 base_datos = cliente["escuela_practica"]
 alumnos = base_datos["alumnos"]
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/')
+def index():
+    try:
+        # Buscamos los alumnos en la base de datos
+        lista_alumnos = list(alumnos.find())
+        return render_template('index.html', alumnos=lista_alumnos)
+    except Exception as e:
+        return f"Error al conectar con la base de datos: {e}"
 
 def leer_formulario():
     nombre = request.form.get("nombre", "").strip()
