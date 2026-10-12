@@ -14,8 +14,8 @@ if not mongo_uri:
     mongo_uri = "mongodb://127.0.0.1:27017/"
 
 cliente = MongoClient(mongo_uri, serverSelectionTimeoutMS=10000)
-base_datos = cliente["escuela_practica"]
-alumnos = base_datos["alumnos"]
+base_datos = cliente["Buffalo01"]
+alumnos = base_datos["escuela_practica"]
 
 def leer_formulario():
     nombre = request.form.get("nombre", "").strip()
