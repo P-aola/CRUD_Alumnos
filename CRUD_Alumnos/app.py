@@ -6,10 +6,17 @@ app = Flask(__name__)
 
 mongo_uri = os.environ.get("MONGO_URI")
 
-# Forzamos una conexión directa con parámetros seguros para la nube
 cliente = MongoClient(mongo_uri, tlsAllowInvalidCertificates=True)
 base_datos = cliente["escuela_practica"]
 alumnos = base_datos["alumnos"]
+
+@app.route('/')
+def index():
+    # Aquí va tu código para mostrar los alumnos
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 def leer_formulario():
     nombre = request.form.get("nombre", "").strip()
